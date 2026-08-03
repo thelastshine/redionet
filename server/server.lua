@@ -8,9 +8,9 @@ if not rednet.isOpen() then error("Failed to establish rednet connection. Attach
 
 SERVER_ID = os.getComputerID()
 -- note: _could_ support multi-server where clients choose "station" via ID..but seems more trouble than it's worth
-rednet.host(P.SERVER, 'server')
-
 local P = require('server_lib.protocol')
+
+rednet.host(P.SERVER, 'server')
 
 local original_term = term.current() -- chat module will redirect term to designated windows. Store it now for reset on reload
 
