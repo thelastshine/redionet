@@ -12,7 +12,7 @@ Github Repository: https://github.com/Rypo/redionet
 local prog_args = { ... }
 
 
-local BASE_URL = "https://raw.githubusercontent.com/Rypo/redionet/refs/heads/main/"
+local BASE_URL = "https://raw.githubusercontent.com/thelastshine/redionet/refs/heads/main/"
 
 local filemap = {}
 
@@ -21,6 +21,7 @@ filemap["server"] = {
     ["./server_lib/audio.lua"] = BASE_URL ..    "server/server_lib/audio.lua",
     ["./server_lib/chat.lua"] = BASE_URL ..     "server/server_lib/chat.lua",
     ["./server_lib/network.lua"] = BASE_URL ..  "server/server_lib/network.lua",
+    ["./server_lib/protocol.lua"] = BASE_URL .. "server/server_lib/protocol.lua",
 }
 
 filemap["client"] = {
@@ -28,6 +29,7 @@ filemap["client"] = {
     ["./client_lib/net.lua"] = BASE_URL ..      "client/client_lib/net.lua",
     ["./client_lib/receiver.lua"] = BASE_URL .. "client/client_lib/receiver.lua",
     ["./client_lib/ui.lua"] = BASE_URL ..       "client/client_lib/ui.lua",
+    ["./client_lib/protocol.lua"] = BASE_URL .. "client/client.lib/protocol.lua",
 }
 
 local function load_settings(verbose)
