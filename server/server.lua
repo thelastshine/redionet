@@ -80,7 +80,7 @@ end
 
 --[[ Server Loops ]]
 local function print_header_info()
-    local repo_url = "github.com/Rypo/redionet"
+    local repo_url = "github.com/thelastshine/redionet"
     term.setTextColor(colors.purple)
     print("\n\15 Redionet")
     term.setTextColor(colors.lightGray)
@@ -232,7 +232,7 @@ local function server_event_loop()
                 os.pullEvent('redionet:update') -- Queued by command `rn update`
 
                 print('Updating...')
-                local install_url = "https://raw.githubusercontent.com/Rypo/redionet/refs/heads/main/install.lua"
+                local install_url = "https://raw.githubusercontent.com/thelastshine/redionet/refs/heads/main/install.lua"
                 local tabid = shell.openTab('wget run ' .. install_url)
                 shell.switchTab(tabid)
             end,
