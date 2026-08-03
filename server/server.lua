@@ -84,7 +84,7 @@ local function print_header_info()
     term.setTextColor(colors.purple)
     print("\n\15 Redionet")
     term.setTextColor(colors.lightGray)
-    print(("\161 %s\n"):format(repo_url))
+    print(("\161 %s\nredionet multichannel fork"):format(repo_url))
     term.setTextColor(colors.gray)
     print("Help support hosting expenses:\n \x10 patreon.com/exclamatory\n")
 end
