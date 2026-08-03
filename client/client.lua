@@ -140,7 +140,7 @@ local function client_loop()
                     os.queueEvent('redionet:reload')
                 
                 elseif command == 'update' then
-                    local install_url = "https://raw.githubusercontent.com/Rypo/redionet/refs/heads/main/install.lua"
+                    local install_url = "https://raw.githubusercontent.com/thelastshine/redionet/refs/heads/main/install.lua"
                     local tabid = shell.openTab('wget run ' .. install_url)
                     shell.switchTab(tabid)
 
