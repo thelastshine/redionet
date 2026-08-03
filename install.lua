@@ -3,7 +3,7 @@ _ _  _ ____ ___ ____ _    _    ____ ____
 | |\ | [__   |  |__| |    |    |___ |__/
 | | \| ___]  |  |  | |___ |___ |___ |  \
 
-Github Repository: https://github.com/Rypo/redionet
+Github Repository: https://github.com/thelastshine/redionet
 
 ]]
 -- Install script based on: https://github.com/CC-YouCube/installer/blob/main/src/installer.lua
@@ -249,7 +249,7 @@ local function fresh_install()
     term.clear()
     term.setCursorPos(1, 1)
     check_requirements()
-    local repo_url = "github.com/Rypo/redionet"
+    local repo_url = "github.com/thelastshine/redionet"
     writeColoured("\15 Redionet\n", colors.purple)
     writeColoured(("\161 %s\n"):format(repo_url), colors.lightGray)
     term.setTextColor(colors.white)
