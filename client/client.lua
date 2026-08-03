@@ -14,6 +14,7 @@ HOST_NAME = 'client_'..CLIENT_ID
 local ui = require("client_lib.ui")
 local receiver = require("client_lib.receiver")
 local net = require('client_lib.net')
+local P = require("client_lib.protocol")
 
 
 --[[ Global Client State]]
@@ -61,11 +62,11 @@ local function setup_server_connection()
     parallel.waitForAny(ui.loading_animation(), function ()
         local payload, code
         repeat
-            id = rednet.lookup('PROTO_SERVER')
+            id = rednet.lookup(P.SERVER)
             if id then
-                rednet.send(id, "CONFIG", 'PROTO_SERVER')
+                rednet.send(id, "CONFIG", P.SERVER)
 
-                id, payload = rednet.receive('PROTO_SERVER:REPLY', 1.0)
+                id, payload = rednet.receive(P.SERVER_REPLY, 1.0)
                 if payload then
                     code, server_settings = table.unpack(payload)
                 end
@@ -78,7 +79,7 @@ local function setup_server_connection()
     return server_settings
 end
 
-if speaker then rednet.host('PROTO_AUDIO', HOST_NAME) else warn_speaker() end
+if speaker then rednet.host(P.AUDIO, HOST_NAME) else warn_speaker() end
 -- check speaker before connect to server to extend time warning visible
 local server_settings = setup_server_connection()
 
@@ -113,19 +114,19 @@ local function client_loop()
             ]]
             function ()
                 os.pullEvent('redionet:sync_state')
-                rednet.send(SERVER_ID, {"STATE", nil}, "PROTO_SERVER_PLAYER")
+                rednet.send(SERVER_ID, {"STATE", nil}, P.SERVER_PLAYER)
             end,
             --[[
                 Server Message -> Client Event
             ]]
             function ()
-                local id, server_state = rednet.receive('PROTO_SERVER_STATE')
+                local id, server_state = rednet.receive(P.SERVER_STATE)
                 CSTATE.server_state = server_state
                 os.queueEvent('redionet:redraw_screen')
             end,
             
             function ()
-                local id, command = rednet.receive('PROTO_COMMAND')
+                local id, command = rednet.receive(P.COMMAND)
 
                 if command == 'sync' then
                     -- no op, 
@@ -144,7 +145,7 @@ local function client_loop()
                     shell.switchTab(tabid)
 
                     local _, file_changes = os.pullEvent('redionet:update_complete') -- Queued by install script
-                    rednet.send(SERVER_ID, file_changes, "PROTO_UPDATED")
+                    rednet.send(SERVER_ID, file_changes, P.UPDATED)
                     
                     if file_changes then
                         os.queueEvent('redionet:reload')
@@ -158,7 +159,7 @@ local function client_loop()
             function ()
                 -- flush the other speaker buffers whenever a client resumes play
                 -- this forces all clients to remain in sync
-                local id = rednet.receive('PROTO_CLIENT_SYNC')
+                local id = rednet.receive(P.CLIENT_SYNC)
                 if speaker then
                     speaker.stop()
                     os.queueEvent("redionet:playback_stopped")
