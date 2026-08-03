@@ -29,7 +29,7 @@ filemap["client"] = {
     ["./client_lib/net.lua"] = BASE_URL ..      "client/client_lib/net.lua",
     ["./client_lib/receiver.lua"] = BASE_URL .. "client/client_lib/receiver.lua",
     ["./client_lib/ui.lua"] = BASE_URL ..       "client/client_lib/ui.lua",
-    ["./client_lib/protocol.lua"] = BASE_URL .. "client/client.lib/protocol.lua",
+    ["./client_lib/protocol.lua"] = BASE_URL .. "client/client_lib/protocol.lua",
 }
 
 local function load_settings(verbose)
