@@ -82,8 +82,7 @@ end
 local function print_header_info()
     local repo_url = "github.com/thelastshine/redionet"
     term.setTextColor(colors.purple)
-    print("\n\15 Redionet\n")
-    print("Redionet multichannel fork by Shiny!")
+    print("\n\15 Redionet multichannel fork by Shiny!")
     term.setTextColor(colors.lightGray)
     print(repo_url)
     term.setTextColor(colors.gray)
