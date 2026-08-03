@@ -4,6 +4,7 @@
 ]]
 
 local speaker = peripheral.find("speaker")
+local P = require("client_lib.protocol")
 
 
 local dbgmon = function (message) end -- debugging func is no op unless conditions are met
@@ -41,8 +42,8 @@ local M = {}
 function M.update_server_state(blocking)
     if blocking then
         -- get current server state on join
-        rednet.send(SERVER_ID, {"STATE", nil}, "PROTO_SERVER_PLAYER")
-        local id, server_state = rednet.receive('PROTO_SERVER_STATE')
+        rednet.send(SERVER_ID, {"STATE", nil}, P.SERVER_PLAYER)
+        local id, server_state = rednet.receive(P.SERVER_STATE)
         CSTATE.server_state = server_state
 
     else
@@ -55,14 +56,14 @@ end
 ---@param code string [NOW, NEXT, ADD]
 function M.send_server_queue(result, code)
     CSTATE.is_paused = false -- queue manipulation = join session if not already
-    rednet.send(SERVER_ID, {code, result},  "PROTO_SERVER_QUEUE")
+    rednet.send(SERVER_ID, {code, result},  P.SERVER_QUEUE)
     os.queueEvent('redionet:sync_state')
 end
 
 ---@param code string [TOGGLE, SKIP, LOOP, STATE]
 ---@param loop_mode? number loop mode [0,1,2] for server playback (only applicable for code=LOOP)
 function M.send_server_player(code, loop_mode)
-    rednet.send(SERVER_ID, {code, loop_mode},  "PROTO_SERVER_PLAYER")
+    rednet.send(SERVER_ID, {code, loop_mode},  P.SERVER_PLAYER)
     os.queueEvent('redionet:sync_state')
 end
 
@@ -70,11 +71,11 @@ function M.toggle_play_local()
     if CSTATE.is_paused or CSTATE.is_paused == nil then -- first click nil
         CSTATE.is_paused = false
         local status = speaker and 1 or -1 -- speakerless = special case: -1. Syncs but doesn't start receiving
-        rednet.send(SERVER_ID, status, 'PROTO_AUDIO_CONNECTION')
+        rednet.send(SERVER_ID, status, P.AUDIO_CONNECTION)
     else
         CSTATE.is_paused = true
         if speaker then
-            rednet.send(SERVER_ID, 0, 'PROTO_AUDIO_CONNECTION')
+            rednet.send(SERVER_ID, 0, P.AUDIO_CONNECTION)
             os.queueEvent("redionet:playback_stopped")
             speaker.stop()
          end
@@ -123,36 +124,36 @@ function M.receive_loop()
 
     local id, message
 
-    rednet.send(SERVER_ID, CSTATE.is_paused and 0 or 1, 'PROTO_AUDIO_CONNECTION')
+    rednet.send(SERVER_ID, CSTATE.is_paused and 0 or 1, P.AUDIO_CONNECTION)
 
     while true do
         parallel.waitForAny(
             function ()
                 -- interruptible.
-                id, message = rednet.receive('PROTO_AUDIO')
+                id, message = rednet.receive(P.AUDIO)
 
                 if CSTATE.is_paused then
-                    rednet.send(id, "playback_stopped", 'PROTO_AUDIO_NEXT') -- still need to respond to differentiate from connection lost
+                    rednet.send(id, "playback_stopped", P.AUDIO_NEXT) -- still need to respond to differentiate from connection lost
                 else
                     local buffer, sub_state = table.unpack(message)
                     play_audio(buffer, sub_state)
                     -- need to check is_paused instead of returning bool because CLIENT_SYNC queues playback_stopped.
                     -- want be able to stop playback, but then immediately get next chunk in this case
-                    rednet.send(id, (not CSTATE.is_paused) and "request_next_chunk" or "playback_stopped", 'PROTO_AUDIO_NEXT')
+                    rednet.send(id, (not CSTATE.is_paused) and "request_next_chunk" or "playback_stopped", P.AUDIO_NEXT)
                 end
             end,
             
             function ()
                 -- interrupts. This returns faster than PROTO_AUDIO, if received while speakers yielding, it will interrupt 
-                id, message = rednet.receive('PROTO_AUDIO_HALT')
+                id, message = rednet.receive(P.AUDIO_HALT)
                 speaker.stop()
                 os.queueEvent("redionet:playback_stopped")
-                rednet.send(id, "playback_interrupted", 'PROTO_AUDIO_NEXT') -- prevent server timeout warnings
+                rednet.send(id, "playback_interrupted", P.AUDIO_NEXT) -- prevent server timeout warnings
             end,
             function ()
                 while true do -- no interrupt
-                    id, message = rednet.receive('PROTO_AUDIO_STATUS')
-                    rednet.send(id, CSTATE.is_paused and 0 or 1, 'PROTO_AUDIO_CONNECTION')
+                    id, message = rednet.receive(P.AUDIO_STATUS)
+                    rednet.send(id, CSTATE.is_paused and 0 or 1, P.AUDIO_CONNECTION)
                 end
             end
         )
