@@ -1,5 +1,8 @@
 # Redionet multi channel support (alpha, just making)
 
+# Credits to Rypo! The original creator
+[Link to the original project, check it out!](https://github.com/Rypo/redionet)
+
 Synchronized, server-wide music streaming with ComputerCraft.
 
 **Features**
