@@ -4,6 +4,7 @@
 ]]
 
 local pp = require("cc.pretty")
+local P = require("server_lib.protocol")
 
 local w,h = term.getSize()
 local monitor = peripheral.find("monitor")
@@ -295,7 +296,7 @@ function M.chat_loop()
             
             function ()
                 -- access chatBox specific behavior without Advanced Peripherals mod
-                local id, message = rednet.receive('PROTO_CHATBOX')
+                local id, message = rednet.receive(P.CHATBOX)
                 local user, uuid = ('computer_#%d'):format(id), ('%08d-%04d-%04d-%04d-%012d'):format(0,0,0,0,id)
                 local ishidden = (message:sub(1,1) == "$")
                 if ishidden then message = message:sub(2) end
