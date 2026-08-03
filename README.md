@@ -1,4 +1,4 @@
-# Redionet
+# Redionet multi channel support (alpha, just making)
 
 Synchronized, server-wide music streaming with ComputerCraft.
 
@@ -16,17 +16,18 @@ Synchronized, server-wide music streaming with ComputerCraft.
 ## Installation
 Option 1: `pastebin`
 ```sh
-pastebin run TH0EPrX0
+pastebin run 937MQkrt
 ```
 
 Option 2: `wget` 
 ```sh
-wget run https://raw.githubusercontent.com/Rypo/redionet/refs/heads/main/install.lua
+wget run https://raw.githubusercontent.com/thelastshine/redionet/refs/heads/main/install.lua
 ```
 
 ## Setup
 
 You'll need exactly 1 Server computer and as many Client computers as you'd like, but at least one to get started. 
+## An adittion to this project, is the fact you will be able to use **MORE** than one computer at the same time, for server purposes.
 
 Computers are designated as either the Server or a Client upon running the Installation script.
 
