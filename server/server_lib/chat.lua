@@ -51,7 +51,7 @@ function M.writeto(text, dst_term)
 end
 
 function M.show_help()
-    local repo_url = "github.com/Rypo/redionet"
+    local repo_url = "github.com/thelastshine/redionet"
     local orig_color = term_window.getTextColor()
 
     -- display help in server terminal, even if monitor attached
